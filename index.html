@@ -3,6 +3,52 @@
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <meta name="viewport" content="user-scalable=no">
 
+	<script>
+	
+        d = document;
+        d.addEventListener("DOMContentLoaded", ready);
+        
+        function ready()
+        {
+            doFormat();
+        }
+
+        function doFormat()
+        {
+            /*
+            discover the screen aspect of the device
+            4:3 screen is ~ 1.33
+            16:10 screen is ~ 1.60
+            16:9 screen is ~ 1.78 
+            18:9 screen is ~ 2.0 
+            */
+            var ratio = screen.height/screen.width;
+            var tmp;
+
+            if (ratio > 1.8) {
+                //reformat for 18:9
+                tmp = d.getElementById("body");
+                tmp.style.marginTop= "120px";
+
+                tmp = d.getElementsByTagName("h3");
+                if (tmp.length > 0) {
+                    for (i=0; i < tmp.length; i++) {
+                        // tmp[i].style.fontSize = "45px";
+                        tmp[i].style.marginTop = "70px";
+                        tmp[i].style.marginBottom = "40px";
+                    }
+                }
+            }
+
+            // if (ratio < 1.51) {
+            //     //Reformat for 4:3 Screen - A 16:9 or 10 is default
+            //     tmp = d.getElementById("body");
+            //     tmp.style.width = "90%";
+            // }
+        }
+    
+    </script>    
+
     <style>
         * {
             font-family: Arial, Helvetica, sans-serif;
@@ -13,9 +59,9 @@
         }
 
         #body {
-            width: 55%;
+            width: 80%;
             height: 90%;
-            margin: 50px auto 40px auto;
+            margin: 80px auto 40px auto;
             /* border: #f00 solid 1px; */
         }
 
@@ -24,16 +70,31 @@
             margin-bottom: -10px;
         }
 
-        h1 {
+        p {
             font-size: 42px;
-            color: #666;
+        }
+
+        h1 {
+            font-size: 65px;
+            margin-bottom: 60px;
         }
 
         h3 {
-            margin-top: 32px;
+            font-size: 56px;
+            margin-top: 48px;
         }
 
-    </style>
+        h4 {
+            font-size: 46px;
+            margin-top: 48px;
+            color: #888;
+        }
+
+        h1, h3 {
+            color: #00a;
+        }
+
+   </style>
 
 </head>
 
@@ -45,11 +106,11 @@
 
         <p>Various projects under development are available for testing purposes.</p>
         <p>
-            I've been trying to makes single, self contained 'app' pages requiring no external resources. Most of the projects do not use graphics and are native Javascript. Others are experiments using base64 graphic conversions, and others may use traditional external resourses.
+            I've been trying to make single, self contained 'app' pages requiring no external resources. Most of the projects do not use graphics and are native Javascript. Others are experiments using embedded base64 graphic conversions, and others may use traditional external resourses.
         </p>
             
         <h3>Screen Size Calculator</h3>
-        <p>This project was created to reveal an exact screen size despite the screen's aspect. I am a terrible virtual keyboard typist and smaller screens only make the problem worse. Screen width determines the density of the keys and I, as I shop for a new phone, am concerned about screen width. Accordingly, an iPhone SE is NOT a consideration. A 6.5" screen sound awesome, unless it has a 20:9 aspect. It's still a large screen but the width is not as dramatic as would be if it had an 19: or 18:9 aspect. I created this calculator to reveal a screen's true physical size. I also included formatting for various phone aspects and tablets. No screen rotation has been considered.</p>
+        <p>This project was created to reveal an exact screen size despite the screen's aspect. I am a terrible virtual keyboard typist and smaller screens only make the problem worse. Screen width determines the density of the keys and I, as I shop for a new phone, am concerned about screen width. Accordingly, an iPhone SE is NOT a consideration! A 6.5" screen sounds awesome, unless it has a 20:9 aspect. It's still a large screen but the width is not as dramatic as would be if it had an 19:9 or 18:9 aspect. I created this calculator to reveal a screen's true physical size. It also includes formatting for various phone aspects and tablets. No screen rotation has been considered.</p>
 
        <p><a href="ScreenCalc-V1.html">See the ScreenCalc app</a></p>
 
