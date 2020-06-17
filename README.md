@@ -1,4 +1,15 @@
-## Welcome to GitHub Pages
+## Welcome to the Playground
+
+Dave Correia's projects will be listed here in various phases of developement. Links to single pages will be listed as most projects are single page apps. The pages are self contained, i.e. no external resources are required.
+
+###Screen Size Calculator
+This project was created to reveal an exact screen size despite the diagonal screen size. I am a terrible virtual keyboard typist and smaller screens only make the problem worse. Screen width determines the density of the keys and I, as I shop for a new phone, am concerned about screen width. Accordingly, an iPhone SE is NOT a consideration. I created a calculator to reveal a screen's physical size.
+
+[See the Screen Size Calculator](https://github.com/Davecorr/davecorr.github.io/master/ScreenCalc-v1.html)
+
+
+
+
 
 You can use the [editor on GitHub](https://github.com/Davecorr/davecorr.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
