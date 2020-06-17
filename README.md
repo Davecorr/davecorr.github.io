@@ -6,7 +6,7 @@ Dave Correia's projects will be listed here in various phases of developement. L
 
 This project was created to reveal an exact screen size despite the diagonal screen size. I am a terrible virtual keyboard typist and smaller screens only make the problem worse. Screen width determines the density of the keys and I, as I shop for a new phone, am concerned about screen width. Accordingly, an iPhone SE is NOT a consideration. I created a calculator to reveal a screen's physical size.
 
-[See the Screen Size Calculator](https://davecorr.github.io/master/ScreenCalc-v1.html)
+[See the Screen Size Calculator](ScreenCalc-V1.html)
 
 
 
