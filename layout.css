@@ -39,7 +39,7 @@
 
     #headerContent h4 {
         font-size: 45px;
-        color: #ccd;
+        color: #bbc;
         line-height: 0%;
         margin-bottom: -10px;
         margin-left: 0px;
@@ -56,8 +56,9 @@
 
     h4 {
         font-size: 46px;
-        margin-top: 48px;
+        margin-top: 20px;
         margin-left: 60px;
+        margin-bottom: 10px;
         color: #888;
     }
 
