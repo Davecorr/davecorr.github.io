@@ -10,8 +10,7 @@
 
     #page{
         position: inherit;
-        height: 90%;
-        /* border: #f00 solid 1px; */
+        height: auto;
     }
 
     #page, #headerContent {
@@ -55,6 +54,12 @@
         font-size: 46px;
         margin-top: 48px;
         margin-left: 60px;
+        color: #888;
+    }
+
+    h5 {
+        font-size: 42px;
+        margin-top: 48px;
         color: #888;
     }
 
