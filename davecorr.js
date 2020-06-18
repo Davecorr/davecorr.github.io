@@ -34,7 +34,7 @@ function doFormat()
     }
 
     // if (ratio < 1.51) {
-    //     //Reformat for 4:3 Screen - A 16:9 or 10 is default
+    //     //Reformat for 4:3 Screen - 16:9 or 10 is default
     //     tmp = d.getElementById("body");
     //     tmp.style.width = "90%";
     // }
