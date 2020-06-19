@@ -52,13 +52,14 @@
     h3 {
         font-size: 56px;
         margin-top: 48px;
+        margin-bottom: 40px;
     }
 
     h4 {
         font-size: 46px;
         margin-top: 20px;
         margin-left: 60px;
-        margin-bottom: 10px;
+        margin-bottom: 0px;
         color: #888;
     }
 
@@ -72,3 +73,8 @@
         color: #00a;
     }
 
+    .main {
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
+    }
