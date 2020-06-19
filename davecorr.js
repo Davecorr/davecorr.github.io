@@ -1,8 +1,17 @@
 d = document;
 d.addEventListener("DOMContentLoaded", ready);
 
+//headerText is the layout for all page headers
+var headerText = ''
+headerText += '<h4 id="titleIntro">Welcome to</h4>'
+headerText += '<h1>Davecorr\'s<br />Javascript Playground</h1>'
+headerText += '<p id="credit">Copyright &copy;2020 Dave Correia <a href="HTTP://www.davecorreia.com">davecorreia.com</a></p>'
+
+
 function ready()
 {
+    d.getElementById("headerContent").innerHTML = headerText;
+    d.getElementById("back").style.left = screen.width * .05;
     doFormat();
 }
 
