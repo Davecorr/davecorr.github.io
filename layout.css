@@ -78,7 +78,13 @@
         color: #888;
     }
 
-    h1, h3 {
+    h6 {
+        font-size: 38px;
+        margin-top: 48px;
+        color: #888;
+    }
+
+   h1, h3 {
         color: #00a;
     }
 
@@ -99,7 +105,7 @@
     #credit {
         color: #bbc;
         margin-top: -10px;
-        font-size: 30px;
+        font-size: 32px;
     }
 
     #credit a {

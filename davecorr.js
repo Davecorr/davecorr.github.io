@@ -11,7 +11,7 @@ headerText += '<p id="credit">Copyright &copy;2020 Dave Correia <a href="HTTP://
 function ready()
 {
     d.getElementById("headerContent").innerHTML = headerText;
-    d.getElementById("back").style.left = screen.width * .05;
+    d.getElementById("back").style.left = screen.width * .17;
     doFormat();
 }
 
@@ -42,10 +42,14 @@ function doFormat()
         }
     }
 
-    // if (ratio < 1.51) {
-    //     //Reformat for 4:3 Screen - 16:9 or 10 is default
-    //     tmp = d.getElementById("body");
-    //     tmp.style.width = "90%";
-    // }
+    if (ratio < 1.51) {
+        //Reformat for 4:3 Screen - 16:9 or 10 is default
+        tmp = d.getElementById("credit");
+        tmp.style.fontSize = "22px";
+        tmp.style.marginTop = "0px";
+
+        d.getElementById("back").style.left = screen.width * .11;
+
+    }
 }
 
