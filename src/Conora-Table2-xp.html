@@ -1,0 +1,783 @@
+<html>
+<head>
+    <meta HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+
+    <title>Covid Deaths</title>
+
+    <!--<script src="../eruda.min.js"></script>
+    <script>eruda.init();</script>
+    -->
+
+    <script>
+
+        // =======================================================
+        // EDIT THESE VALUES:
+
+        var CovidNumber = "674123";
+        var updateDate = "09/17/2021";
+
+        // =======================================================
+        CovidNumber = numRemoveCommas(CovidNumber);
+        var CovidNumberBak = CovidNumber;
+        var updateDateBak = updateDate;
+        const storeKeyNames = ["storedCount", "updateDate"];
+        const d = document;
+        const maxTblVal = 700000;
+        const columnTblVal = 200000;
+        const screenWidth = "99.5%";
+        const firstCovidDeath = new Date(2020, 1, 29);
+        var currentDate = new Date(updateDate);
+
+        // =======================================================
+
+        if (typeof(Storage) != "undefined") {
+            var localStore = true;
+            setUpLocalStorage();
+        }
+
+        checkStoredData();
+
+        const arrHistory = [
+            ["COVID-19", CovidNumber],
+            //["Galveston Hurricane (1900)", 8000],
+            //["Battle of Gettysburg (Civil War 1863)", 3155],
+            //["Battle of Antietam (Civil War 1862)", 3675],
+            //["Deaths from AIDS-related illness - 2019",690000],
+            //["Twin Towers Attack (9/11/2001)", 2977],
+            //["2009 - 2010 H1N1 flu pandemic", 12469],
+            ["Korean War", 36574],
+            ["Vietnam War", 58220],
+            ["1918 - 1919 Spanish Flu pandemic", 675000],
+            ["Civil War (1861 - 1865)", 620000],
+            ["World War II (1941 - 1945)", 405399],
+            ["World War I", 116516],
+            //["1957-1958 Asian Flu pandemic", 116000],
+            ["Deaths by cancer - 2020 (est.)", 606520],
+            //["1968 Hong Kong Flu pandemic", 100000]
+            //["Pearl Harbor", 2403]
+        ];
+
+        var i = 0;
+        var val;
+        var covidPos;
+
+        for (i; i < arrHistory.length; i++) {
+            val = arrHistory[i][0];
+            if (val.indexOf("COVID") > -1) {
+                covidPos = i;
+                break;
+            }
+        }
+
+        arrHistory.sort(function(a, b) {
+            return a[1] - b[1]
+        });
+
+        var totalDaysMS = currentDate.getTime() - firstCovidDeath.getTime();
+        averagePerDay = parseInt(CovidNumber / (totalDaysMS / (1000*60*60*24)));
+
+        var rowStart, rowDatStart, rowDatStop, rowBarStart, rowEnd;
+
+        rowStart = "<div class='tableRow' id='R";
+        rowDatStart = "'><div class='column1 column'>";
+        rowDatStart += "<p class='rowData' id='D";
+        rowDatStop = "'>X</p>";
+        rowBarStart = "<div class='chartBar' id='B";
+        rowEnd = "'>";
+        rowEnd += "</div></div> ";
+        rowEnd += "<div class='column2 column'></div><div class='column3 column'></div>";
+        rowEnd += "<div class='column4 columnFill'></div>"
+
+        d.addEventListener("DOMContentLoaded", ready);
+
+        // =======================================================
+        function ready() {
+            
+            for (i; i < arrHistory.length; i++) {
+                val = arrHistory[i][0];
+                if (val.indexOf("COVID") > -1) {
+                    covidPos = i;
+                    break;
+                }
+            }
+
+            d.getElementById("valueTitle").onclick = function() {
+                d.getElementById("modal").style.display = "block";
+            }
+
+            d.getElementById("reset").onclick = function() {
+                resetUpdate();
+            }
+
+            d.getElementById("cancel").onclick = function() {
+                d.getElementById("modal").style.display = "none";
+            }
+
+            d.getElementById("ok").onclick = function() {
+                setNewUpdate();
+            }
+
+            d.getElementById("dialogOK").addEventListener("click", dialogClose);
+
+            var tbl = d.getElementById("table");
+
+            d.getElementById("total").innerHTML = numAddCommas(CovidNumber) + "*";
+            d.getElementById("updateDate").innerHTML = updateDate;
+            //d.getElementById("updateSource").innerHTML = updateSource;
+            d.getElementById("table").style.width = screenWidth;
+            d.getElementById("header").style.width = screenWidth;
+
+            i = 0;
+            tbl.innerHTML = "";
+
+            for (i; i < arrHistory.length; i++) {
+
+                tbl.innerHTML += rowStart + i + rowDatStart +i+ rowDatStop;
+                tbl.innerHTML += rowBarStart +i+ rowEnd;
+
+                d.getElementById("D" + i).innerHTML = arrHistory[i][0];
+                d.getElementById("D" + i).innerHTML += " &mdash; " + numAddCommas(arrHistory[i][1]);
+            }
+            d.getElementById("D" + covidPos).innerHTML += " (since Jan 21, 2020**)";
+
+            setGradient();
+            doFormat();
+        }
+
+        // =======================================================
+
+        function numAddCommas(num) {
+            if (num != undefined) {
+
+                if (num.toString().indexOf(".") > -1) {
+                    var tmp = num.toFixed(2).toString().split(".");
+                    var pre = tmp[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",").valueOf();
+                    var tot = pre + "." + tmp[1];
+                } else {
+                    var tot = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",").valueOf();
+                }
+                return (tot);
+            }
+        }
+
+        function numRemoveCommas(num) {
+            return (num.toString().replace(/,/g, '')).valueOf();
+        }
+
+        function setGradient() {
+            //get column Width percent
+            var columnNum = Number((maxTblVal/columnTblVal).toFixed(2));
+            var columnWidth = Number((100/columnNum).toFixed(2));
+            var offset = 0;
+            var columnColorStart = "rgba(0,0,0, .0) ";
+            var columnColorStop = "rgba(60,60,60, .6) ";
+            var tableBkgStr = "linear-gradient(90deg,";
+
+            var i = 0;
+            for (i; i < Math.ceil(columnNum); i++) {
+                tableBkgStr += columnColorStart + ((i*columnWidth) + Number(columnWidth*offset)) + "%, ";
+                tableBkgStr += columnColorStop;
+                tableBkgStr += ((i+1)*columnWidth) > 100 ? 100+"% ": (i+1)*columnWidth + "%, ";
+            }
+            tableBkgStr += ")";
+
+            d.getElementById("table").style.backgroundImage = tableBkgStr;
+
+            i = 0;
+            for (i; i < arrHistory.length; i++) {
+
+                currBar = d.getElementById("B" + i);
+                percent = (arrHistory[i][1] / maxTblVal) * 100;
+
+                if (i == covidPos) {
+                    d.getElementById("D" + i).style.color = "#fC0";
+                    currBar.style.backgroundImage = "linear-gradient(90deg, rgba(220,60,0, 1) 0%, rgba(255,180,0, 1) "+(percent)+"%, rgba(0,0,0,.0) "+(percent)+"%, rgba(0,0,0,.0) 100%)";
+                } else {
+                    currBar.style.backgroundImage = "linear-gradient(90deg, rgba(80,100,120, 1) 0%, rgba(90,170,200, 1) "+(percent)+"%, rgba(0,0,0,0) "+(percent)+"%, rgba(0,0,0,0) 100%)";
+                }
+            }
+        }
+
+        function setNewUpdate() {
+            let nVal = numRemoveCommas(d.getElementById("newCount").value);
+            let nDate = d.getElementById("newDate").value;
+            let arrDate = nDate.split("/");
+            let dialog = d.getElementById("dialog");
+            let dialogTxt = d.getElementById("dialogMsg");
+
+            if (isNaN(nVal)) {
+                dialogTxt.innerHTML = "There is an error in the Count that you entered.<br>Please check the Count.";
+                dialog.style.display = "block";
+                return;
+            } else if (!checkDate(nDate)) {
+                dialogTxt.innerHTML = "There is an error in the Date that you entered.<br>Please check the Date.<br><br>Enter the format of:   MM / DD / YYYY   <br>(Do not use spaces)";
+                dialog.style.display = "block";
+                return;
+            } else {
+                d.getElementById("modal").style.display = "none";
+                updateData(nVal, nDate);
+            }
+        }
+
+        function resetUpdate() {
+            d.getElementById("newCount").value = CovidNumberBak;
+            d.getElementById("newDate").value = updateDateBak;
+        }
+
+        function checkDate(date) {
+            let err = 1;
+            let tmp = "";
+            if (date != "") {
+                tmp = date.split("/");
+                if (tmp.length != 3 || date.length != 10) {
+                    err = 0;
+                }
+
+                let i = 0;
+                for (i; i < 3; i++) {
+                    if (isNaN(tmp[i])) {
+                        err = 0;
+                    }
+                }
+            }
+            return err;
+        }
+
+        function checkStoredData() {
+            let upD = getStorage("updateDate");
+            if (upD != updateDate) {
+                updateDate = upD;
+                setStorage("updateDate", updateDate);
+                currentDate = new Date(updateDate);
+            }
+
+            let upC = getStorage("storedCount");
+            if (upC != CovidNumber) {
+                CovidNumber = upC;
+                setStorage("storedCount", CovidNumber);
+            }
+        }
+
+        function setUpLocalStorage() {
+            let i = 0;
+            for (i; i < storeKeyNames.length; i++) {
+
+                if (!getStorage(storeKeyNames[i])) {
+                    setStorage(storeKeyNames[i], "null");
+                }
+            }
+        }
+
+        function updateData(ct, dt) {
+            if (ct != "") {
+                setStorage("storedCount", ct);
+            }
+            if (dt != "") {
+                setStorage("updateDate", dt);
+            }
+            location.reload(true);
+        }
+
+        function getStorage(memKey) {
+            if (localStore) {
+                return window.localStorage.getItem(memKey);
+            }
+        }
+        function setStorage(memKey, val) {
+            if (localStore) {
+                window.localStorage.setItem(memKey, val);
+            }
+        }
+
+        function dialogClose() {
+            dialog.style.display = "none";
+        }
+
+        function doFormat() {
+            var ratio = screen.height/screen.width;
+            //ratio = 2; // fake a 19:9 screen
+            if (ratio > 1.76) {
+                //alert(ratio);
+                let rows = d.getElementsByClassName("tableRow");
+                let para = d.getElementsByTagName("p");
+                let btn = d.getElementsByTagName("button");
+                let chtBar = d.getElementsByClassName("chartBar");
+                let tblRow = d.getElementsByClassName("tableRow");
+                let rowData = d.getElementsByClassName("rowData");
+                let modTxt = d.getElementsByClassName("modalTxt");
+                let txtInput = d.getElementsByClassName("txtInput");
+                let modRow = d.getElementsByClassName("modalRow");
+
+                d.getElementById("h1").style.fontSize = 64 + "px";
+                d.getElementById("header").style.height = 60 + "px";
+                d.getElementById("header").style.marginBottom = 18 + "px";
+
+                mod = d.getElementById("modal");
+                mod.style.width = 800 + "px";
+                mod.style.marginLeft = -420 + "px";
+
+                let i = 0;
+                if (para.length > 0) {
+                    i = 0;
+                    for (i; i < para.length; i++) {
+                        para[i].style.fontSize = 32 + "px";
+                    }
+                }
+                if (rows.length > 0) {
+                    i = 0;
+                    for (i; i < rows.length; i++) {
+                        rows[i].style.height = 76 + "px";
+                    }
+                }if (chtBar.length > 0) {
+                    i = 0;
+                    for (i; i < chtBar.length; i++) {
+                        chtBar[i].style.height = 32 + "px";
+                    }
+                }
+                if (rowData.length > 0) {
+                    i = 0;
+                    for (i; i < rowData.length; i++) {
+                        rowData[i].style.height = 38 + "px";
+                        rowData[i].style.marginTop = 30 + "px";
+                    }
+                }
+                if (btn.length > 0) {
+                    i = 0;
+                    for (i; i < btn.length; i++) {
+                        btn[i].style.fontSize = 38 + "px";
+                        btn[i].style.width = 180 + "px";
+                        btn[i].style.height = 66 + "px";
+                    }
+                }
+
+                if (modTxt.length > 0) {
+                    i = 0;
+                    for (i; i < modTxt.length; i++) {
+                        modTxt[i].style.fontSize = 38 + "px";
+                    }
+                }
+
+                if (txtInput.length > 0) {
+                    i = 0;
+                    for (i; i < txtInput.length; i++) {
+                        txtInput[i].style.fontSize = 38 + "px";
+                        txtInput[i].style.width = 250 + "px";
+                        txtInput[i].style.height = 86 + "px";
+                    }
+                }
+
+                if (modRow.length > 0) {
+                    i = 0;
+                    for (i; i < modRow.length; i++) {
+                        modRow [i].style.marginBottom = 72 + "px";
+                    }
+                }
+                
+                let foot = d.getElementById("footnote");
+                foot.style.fontSize = 30 + "px";
+                foot.style.marginTop = 46 + "px";
+            }
+        }
+
+    </script>
+
+    <style type="text/css">
+
+        * {
+            font-family: sans-serif;
+            font-weight: normal;
+            color: #eeeeee;
+        }
+
+        body {
+            padding: 8%;
+            padding-top: 4%;
+            background-color: #222;
+            max-width: 900px;
+            font-size: 22px;
+        }
+
+        h1 {
+            font-size: 38px;
+            font-weight: bold;
+            color: #ccc;
+            margin-bottom: -8px;
+        }
+
+        p {
+            line-height: 120%;
+            margin-bottom: -10px;
+            color: #fff;
+        }
+
+        a {
+            color: #68a;
+        }
+        
+        input[type=text] {
+            height: 40px;
+            width: 190px;
+            color: #000;
+            font-size: 20px;
+            text-align: center;
+            padding-top: 2px;
+            border: 2px solid #aaa;
+            border-radius: 3px;
+        }
+
+        button {
+            width: 120px;
+            height: 40px;
+            margin-left: 20px;
+            margin-right: 0px;
+            color: #000;
+            font-size: 20px;
+            background-color: #ffb;
+            border: 2px solid #aaa;
+            border-radius: 12px;
+        }
+
+        .updateBtn {
+            margin-left: 0px;
+            margin-right: 14px;
+            background-color: #ccc;
+            display: none;
+        }
+
+        .tableTitle {
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 28px;
+            float: left;
+            clear: both;
+        }
+
+        #table {
+            display: block;
+            height: auto;
+            border-top: 2px solid #777;
+            float: left;
+            clear: both;
+            position: relative;
+            /* border:2px solid #f00;*/
+        }
+
+        #table, #header {
+            width: 500px;
+            width: 100%;
+        }
+
+        .column {
+            width: 28.57%;
+            height: auto;
+            float: left;
+        }
+
+        .columnFill {
+            width: 10%;
+            clear: right;
+        }
+
+        .column1 {
+            overflow: visible;
+            white-space: nowrap;
+        }
+
+        .chartBar {
+            width: 100%;
+            height: 20px;
+            margin-top: 8px;
+            border-bottom: 1px solid #555;
+            clear: both;
+        }
+
+        .column2, .column3, .column4 {
+            border-left: 1.5px solid #aaaaaaaa;
+        }
+
+        #header {
+            display: block;
+            height: 40px;
+            text-align: right;
+            margin-bottom: 10px;
+            margin-left: 26px;
+            float: left;
+            clear: both;
+        }
+
+        #header .column {
+            text-align: right;
+            border: none;
+        }
+
+        .tableRow {
+            height: 50px;
+            width: 100%;
+            float: left;
+            clear: both;
+        }
+
+        .rowData {
+            width: auto;
+            height: 30px;
+            color: #ddd;
+            margin-bottom: 5px;
+            float: left;
+            clear: both;
+            //border: 2px solid #f00;
+        }
+
+        #modal {
+            width: 500px;
+            height: auto;
+            display: none;
+            position: fixed;
+            top: 165px;
+            left: 50%;
+            margin-left: -270px;
+            padding: 25px;
+            padding-bottom: 0px;
+            background-color: #ddd;
+            border-radius: 3px;
+            box-shadow: 0px 12px 84px 30px #000;
+        }
+
+        .modalLeft {
+            width: 150px;
+            float: left;
+        }
+
+        .modalRight {
+            width: 60%;
+            float: left;
+            clear: right;
+            padding: 10px;
+            padding-top: 0px;
+            padding-left: 0px;
+            font-size: 20px;
+            color: #000;
+        }
+
+        .modalRow {
+            width: 100%;
+            height: 60px;
+            margin-bottom: 18px;
+            float: left;
+            clear: right;
+            color: #000;
+            font-size: 20px;
+        }
+
+        .buttonRight {
+            width: 100%;
+            float: left;
+            clear: both;
+            padding-top: 16px;
+            font-size: 20px;
+            color: #000;
+            text-align: right;
+        }
+
+        #updateDate {
+            color: #ffcc00;
+        }
+
+        #footnote {
+            font-size: 18px;
+            color: #888;
+            float: left;
+            clear: both;
+            margin-top: 30px;
+            margin-bottom: 100px;
+        }
+
+        #ok {
+            border: 3px solid #a6a6a6;
+        }
+
+        #cancel {
+            background: #f8f8f8;
+            color: #666;
+        }
+
+        #reset {
+            background: #f8f8f8;
+            color: #666;
+        }
+
+        .modalTxt {}
+
+        .txtInput {}
+
+        #dialog {
+            width: 550px;
+            height: auto;
+            position: fixed;
+            top: 205px;
+            left: 50%;
+            margin-left: -295px;
+            padding: 25px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            background-color: #fff;
+            /* box-shadow: 0 50px 300px 20px rgba(200, 0, 0, 1);*/
+            box-shadow: 0px 0px 250px 30px #000;
+            z-index: 100;
+            border-top: 1px solid #fff;
+            border-bottom: 2px solid #666;
+            border-radius: 3px;
+            display: none;
+        }
+
+        #dialog h3 {
+            margin-bottom: 4px;
+        }
+
+        #dialogTitle {
+            color: #F00;
+            font-weight: bold;
+            //border: 1px #00f solid;
+        }
+
+        #dialogMsg {
+            width: 100%;
+            color: #000;
+            //border: 2px #0f0 solid;
+            float: left;
+            clear: both;
+        }
+
+        #dlogOk {
+            height: auto;
+            float: right;
+            clear: both;
+            //border: 2px #f00 solid;
+            margin-top: 35px;
+            margin-bottom: 20px;
+        }
+
+        #dialogOK {
+
+            float: right;
+            clear: left;
+            //background-color: #efefef;
+            //border: 1px #666 solid;
+            font-weight: bold;
+            text-align: center;
+
+        }
+
+        .total {
+            float: left;
+            clear: both;
+            margin-top: 0px;
+            margin-bottom: 24px;
+            width: 100%;
+
+        }
+
+        #total {
+            color: #ffac00;
+        }
+
+        div {
+            border: 0px solid #f00;
+        }
+
+
+    </style>
+
+</head>
+
+<body>
+
+    <div>
+        <h1 id="h1">Covid-19 U.S. Deaths Comparison</h1>
+    </div>
+
+    <div class="total">
+        <h1 id="total"></h1>
+
+        <div class="tableTitle" id="valueTitle">
+            <p>
+                <button id="update" class="updateBtn">Update</button> Updated: <span id="updateDate"></span>
+            </p>
+        </div>
+
+        <div id="header">
+            <div class="column">
+                <p>
+                    200k
+                </p>
+            </div>
+            <div class="column">
+                <p>
+                    400k
+                </p>
+            </div>
+            <div class="column">
+                <p>
+                    600k
+                </p>
+            </div>
+        </div>
+
+        <div id="table"></div>
+
+        <p id="footnote">
+            * &nbsp;&nbsp;Source - <a href="https://www.nbcnews.com/health/health-news/coronavirus-deaths-united-states-each-day-2020-n1177936">NBC News</a><br>
+            ** The CDC's first reported death statistic
+        </p>
+
+        <div id="modal">
+
+            <div class="modalRow">
+                <div class="modalRight modalTxt">
+                    Enter an updated count:<br>
+                </div>
+                <div class="modalLeft">
+                    <input type="text" id="newCount" class="txtInput" name="count" value="" placeholder="Enter new count">
+                </div>
+            </div>
+
+            <div class="modalRow">
+                <div class="modalRight modalTxt">
+                    Enter the updated date:
+                </div>
+                <div class="modalLeft">
+                    <input type="text" id="newDate" class="txtInput" name="newDate" value="" placeholder="mm/dd/yyyy">
+                </div>
+            </div>
+
+            <div class="modalRow modalTxt">
+                Update the Covid-19 data. The updated data will be stored and used for future reference.
+            </div>
+
+            <div class="modalRow">
+                <div class="buttonRight">
+                    <button type="button" id="reset">Reset</button>
+                    <button type="button" id="cancel">Cancel</button>
+                    <button type="button" id="ok">Ok</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- =========================================================-->
+        <!-- ==  DYNAMIC MODAL  ======================================-->
+        
+        <div id="dialog">
+            
+            <h3 id="dialogTitle">Error!</h3>
+            <p id="dialogMsg">
+                dialogMsg
+            </p>
+            <div id="dlogOK">
+                <button type="button" id="dialogOK">Ok</button>
+            </div>
+            
+        </div>
+
+    </body>
+    
+</html>
