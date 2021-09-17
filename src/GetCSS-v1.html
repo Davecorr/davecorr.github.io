@@ -1,0 +1,334 @@
+<html>
+<head>
+
+    <title>Get Class & ID</title>
+
+    <script src="../eruda.min.js"></script>
+    <script>
+        eruda.init();
+    </script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", ready);
+        const d = document;
+        var pop;
+        var output;
+
+        function ready() {
+
+            const btn = d.getElementById("button");
+            const output = d.getElementById("output");
+            const htm = d.getElementById("htm");
+            pop = d.getElementById("popup");
+
+            btn.onclick = function () {
+                d.getElementById("fileChoice").click();
+            };
+
+            d.getElementById("fileChoice").addEventListener('change', handleFileSelect, false);
+        }
+
+        function doClick() {
+
+            var idx = output.indexOf('<title>');
+            var title = output.substr(idx, idx+30);
+
+            idx = output.indexOf('<body>');
+            var tmp = output.substr(idx, output.length);
+
+            var i = 0;
+            var c = 30;
+            spaces = "                                       ";
+            collect = [];
+
+            var tmpClass = "";
+            var tmpId = "";
+
+            tmp = tmp.split("\n");
+
+            for (i; i < tmp.length; i++) {
+
+                if (tmp[i].indexOf("class=") > -1 ||
+                    tmp[i].indexOf("id=") > -1) {
+                    collect.push(tmp[i]);
+                }
+            }
+
+            i = 0;
+            for (i; i < collect.length; i++) {
+
+                idx = collect[i].indexOf("class=");
+
+                if (idx > -1) {
+
+                    idx += 7;
+                    tmpSub = collect[i].substr(idx, collect[i].length);
+                    idx = tmpSub.indexOf('"');
+                    tmpClass += tmpSub.substr(0, idx) + "<br>";
+                }
+
+                idx = collect[i].indexOf("id=");
+
+                if (idx > -1) {
+
+                    idx += 4;
+                    tmpSub = collect[i].substr(idx, collect[i].length);
+                    idx = tmpSub.indexOf('"');
+                    if (tmpSub.substr(0, idx) != "") {
+                        tmpId += tmpSub.substr(0, idx) + "<br>";
+                    }
+                }
+            }
+
+            ///remove duplicate classes and separate multiples
+            classArr = tmpClass.split("<br>");
+            classTmp = [];
+
+            i = 0;
+            for (i; i < classArr.length; i++) {
+
+                if (classArr[i].indexOf(" ") > -1) {
+
+                    c = 0;
+                    junk = classArr[i].split(" ");
+                    for (c; c < junk.length; c++) {
+                        classTmp.push(junk[c]);
+                    }
+
+                } else {
+                    classTmp.push(classArr[i]);
+                }
+            }
+
+            classTmp.sort();
+            var test;
+            var classFin = [];
+
+            i = 0;
+            for (i; i < classTmp.length; i++) {
+
+                test = classTmp[i];
+
+                c = 0;
+                foo = 0;
+
+                for (c; c < classFin.length; c++) {
+
+                    if (test == classFin[c]) {
+                        foo += 1;
+                    }
+                }
+
+                if (foo == 0 && classTmp[i] != "") {
+                    classFin.push(classTmp[i]);
+                }
+            }
+
+            tmpClass = "";
+            i = 0;
+            for (i; i < classFin.length; i++) {
+                tmpClass += classFin[i] + "<br>";
+            }
+
+            if (tmpClass == "") {
+                tmpClass = "No classes used";
+            }
+
+            outputClass.innerHTML = "<h3>Classes</h3>";
+            outputClass.innerHTML += tmpClass;
+
+            outputId.innerHTML = "<h3>IDs</h3>";
+            if (tmpId.length == 0) {
+                tmpId = "No IDs used";
+            }
+            outputId.innerHTML += tmpId;
+
+            idx = title.indexOf('>') + 1;
+            title = title.substr(idx, title.length-1);
+            idx = title.indexOf('<');
+            title = title.substr(0, idx);
+
+            pop.style.display = "none";
+
+            if (title != "") {
+                d.getElementById("title").innerHTML = '"'+title+'" - ' + fileName;
+            } else {
+                d.getElementById("title").innerHTML = "";
+            }
+        }
+
+        function handleFileSelect(evt) {
+
+            var files = evt.target.files; // FileList object
+            output = (escape(files[0].name));
+
+            /// Only process text files.
+            if (!files[0].type.match('text.*')) {
+                alert("Wrong File Type! \n Load TEXT files (.txt) only");
+            }
+            reader = new FileReader();
+            reader.onload = function() {
+                pop.style.display = "block";
+                setTimeout(doClick, 50);
+                output = reader.result;
+            }
+
+            // Read the file
+            reader.readAsText(files[0]);
+            fileName = files[0].name;
+        }
+
+    </script>
+
+    <!-- ====================================================== -->
+
+    <style>
+        * {
+            font-family: Sans-Serif;
+        }
+
+        body {
+            padding: 30px 30px;
+            background-color: #eee;
+        }
+
+        h1 {
+            font-size: 52px;
+            font-weight: bold;
+            margin-bottom: 0px;
+        }
+
+        h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 200px;
+            height: 80px;
+        }
+
+        #htm {
+            width: 100%;
+            height: 10%;
+            background-color: #ffd;
+            overflow: scroll;
+            border: none;
+            border-top: 2px solid #d8d8d8;
+            border-bottom: 2px solid #fff;
+            border-radius: 14px;
+            padding: 25px;
+        }
+
+        #button {
+            width: 250px;
+            height: 45;
+            clear: left;
+            margin-top: 20px;
+            background-color: #088ace;
+            border-radius: 14px;
+            text-align: center;
+            font-size: 28px;
+            padding-top: 12px;
+            color: #fff;
+            margin-bottom: 40px;
+        }
+
+        #button:active {
+            background-color: #ed0;
+        }
+
+        #outputClass, #outputId {
+            width: 44%;
+            height: 82%;
+            float: left;
+            background-color: #fff;
+            padding: 0px 15px 0 28px;
+            margin-bottom: 20px;
+            margin-top: 0px;
+            font-size: 28px;
+            border-radius: 4px;
+            overflow: scroll;
+            border-top: 4px solid #d8d8d8;
+            border-left: 2px solid #ddd;
+            border-right: 1px solid #d8d8d8;
+            border-bottom: 2px solid #fff;
+        }
+
+        #outputId {
+            float: right;
+            clear: right;
+        }
+
+        #popup {
+            height: 60px;
+            width: 300px;
+            background-color: #29b6e7;
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            padding-top: 30px;
+            line-height: 80%;
+            color: #fff;
+            margin: 0 200px 0 300px;
+            position: absolute;
+            top: 500px;
+            border-radius: 30px;
+            box-shadow: 0 4px 6px #333;
+            display: none;
+        }
+
+        #main {
+            height: 96%;
+            width: 94%;
+            padding-top: 0px;
+            margin: 0px auto 0px auto;
+            //border: 2px solid #f00;
+        }
+
+        #title {
+            font-size: 28;
+            color: #000;
+        }
+
+        #getFileButton {
+            display: none;
+            opacity: 0;
+        }
+
+        .grey {
+            color: #666;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div id="main">
+        <h1>Get Classes and IDs from HTML</h1>
+
+        <h2 class="grey">HTML Title - <span id="title">None</span></h2>
+
+        <div id="button">
+            Load HTML File
+        </div>
+
+        <div id="getFileButton">
+            <input type="file" id="fileChoice" name="files">
+        </div>
+
+        <div id="outputClass"></div>
+        <div id="outputId"></div>
+
+    </div>
+
+    <div id="popup">
+        Processing...
+    </div>
+
+</body>
+
+</html>
