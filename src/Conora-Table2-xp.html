@@ -13,7 +13,7 @@
         // =======================================================
         // EDIT THESE VALUES:
 
-        var CovidNumber = "674123";
+        var CovidNumber = "674,123";
         var updateDate = "09/17/2021";
 
         // =======================================================
@@ -73,8 +73,8 @@
             return a[1] - b[1]
         });
 
-        var totalDaysMS = currentDate.getTime() - firstCovidDeath.getTime();
-        averagePerDay = parseInt(CovidNumber / (totalDaysMS / (1000*60*60*24)));
+        //var totalDaysMS = currentDate.getTime() - firstCovidDeath.getTime();
+        //averagePerDay = parseInt(CovidNumber / (totalDaysMS / (1000*60*60*24)));
 
         var rowStart, rowDatStart, rowDatStop, rowBarStart, rowEnd;
 
@@ -427,21 +427,18 @@
 
         button {
             width: 120px;
-            height: 40px;
-            margin-left: 20px;
-            margin-right: 0px;
-            color: #000;
+            height: 32px;
+            color: #fff;
             font-size: 20px;
-            background-color: #ffb;
-            border: 2px solid #aaa;
+            background-color: #666;
+            border: 0px;
             border-radius: 12px;
         }
 
         .updateBtn {
             margin-left: 0px;
             margin-right: 14px;
-            background-color: #ccc;
-            display: none;
+            display: block;
         }
 
         .tableTitle {
@@ -699,8 +696,8 @@
         <h1 id="total"></h1>
 
         <div class="tableTitle" id="valueTitle">
-            <p>
-                <button id="update" class="updateBtn">Update</button> Updated: <span id="updateDate"></span>
+                <button id="update" class="updateBtn">Update</button>
+            <p>Updated: <span id="updateDate"></span>
             </p>
         </div>
 
