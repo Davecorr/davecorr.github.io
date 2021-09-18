@@ -40,6 +40,14 @@ function doFormat()
                 tmp[i].style.marginBottom = "40px";
             }
         }
+
+        tmp = d.getElementsByTagName("p");
+        if (tmp.length > 0) {
+            for (i=0; i < tmp.length; i++) {
+                tmp[i].style.fontSize = "35px";
+                //tmp[i].style.marginBottom = "40px";
+            }
+        }
     }
 
     if (ratio < 1.51) {
