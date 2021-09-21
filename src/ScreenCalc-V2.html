@@ -35,7 +35,7 @@
             resWinput = d.getElementById("resW");
             resHinput = d.getElementById("resH");
 
-            defaultInputBG = "#fff";
+            defaultInputBG = "#ffd";
             errorInputBG = "ffd8d8";
 
             doCalc();
@@ -460,7 +460,7 @@
             border: 0;
             border-top: 4px solid #ddd;
             border-bottom: 3px solid #fff;
-            background-color: #fff;
+            background-color: #ffd;
             color: #000;
             padding-top: 3px;
             border-radius: 14px;
@@ -651,7 +651,7 @@
             opacity: .8;
         }
 
-:-ms-input-placeholder {
+        :-ms-input-placeholder {
             /* Internet Explorer 10-11 */
             color: #dddddd;
             opacity: .8;
@@ -660,7 +660,7 @@
         #dimContainer {
             width: 94%;
             height: 200px;
-            background-color: #ffd;
+            background-color: #fff;
             padding: 24px;
             border-radius: 28px;
             //border: 2px solid red;
@@ -673,7 +673,7 @@
         }
         
         .instruct {
-            margin-bottom: 0px;
+            margin-bottom: 10px;
         }
 
     </style>
@@ -692,6 +692,45 @@
             <p>
                 Calculate the physical size of a screen.
             </p>
+        </div>
+
+        <h3 id="resultsTitle">Screen Dimensions (Inches)</h3>
+
+        <div id="dimContainer">
+
+            <div id="infoContainer">
+
+                <div class="row header">
+                    <div class="leftCol">
+                        <p>
+                            Height
+                        </p>
+                    </div>
+                    <div class="middleCol">
+                        <p>
+                            Width
+                        </p>
+                    </div>
+                    <div class="rightCol">
+                        <p id="ppi-area">
+                            Area (sq. in.)
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="leftCol">
+                        <p id="outH" class="hilite boxWhite"></p>
+                    </div>
+                    <div class="middleCol">
+                        <p id="outW" class="hilite boxWhite"></p>
+                    </div>
+                    <div class="rightCol">
+                        <p id="totalArea" class="hilite boxWhite"></p>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
         <p id="aspectInstruct2" class="bold instruct">
@@ -739,45 +778,6 @@
         </div>
 
 
-        <h3 id="resultsTitle">Screen Dimensions (Inches)</h3>
-
-        <div id="dimContainer">
-
-            <div id="infoContainer">
-
-                <div class="row header">
-                    <div class="leftCol">
-                        <p>
-                            Height
-                        </p>
-                    </div>
-                    <div class="middleCol">
-                        <p>
-                            Width
-                        </p>
-                    </div>
-                    <div class="rightCol">
-                        <p id="ppi-area">
-                            Area (sq. in.)
-                        </p>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="leftCol">
-                        <p id="outH" class="hilite boxWhite"></p>
-                    </div>
-                    <div class="middleCol">
-                        <p id="outW" class="hilite boxWhite"></p>
-                    </div>
-                    <div class="rightCol">
-                        <p id="totalArea" class="hilite boxWhite"></p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
         <h4 class="addGap">Calculate Screen Aspect</h4>
 
         <p id="aspectInstruct" class="bold instruct">
@@ -813,7 +813,7 @@
                 </div>
                 <div class="middleCol">
                     <p>
-                        <input id="resW" type="text" name="resWinput" value="" placeholder="1080" onClick="this.placeholder='';this.select()" oninput="doResCalc()" onblur="doResCalc()" />
+                        <input id="resW" type="text" name="resWinput" value="1080" placeholder="1080" onClick="this.placeholder='';this.select()" oninput="doResCalc()" onblur="doResCalc()" />
                     </p>
                 </div>
                 <div class="rightCol">
