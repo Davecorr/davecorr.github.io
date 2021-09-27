@@ -4,17 +4,17 @@
 
     <title>Covid Deaths</title>
 
-    <!--<script src="../eruda.min.js"></script>
+    <script src="../eruda.min.js"></script>
     <script>eruda.init();</script>
-    -->
+    
 
     <script>
 
         // =======================================================
         // EDIT THESE VALUES:
 
-        var CovidNumber = "674123";
-        var updateDate = "09/17/2021";
+        var CovidNumber = "675445";
+        var updateDate = "09/21/2021";
 
         // =======================================================
         CovidNumber = numRemoveCommas(CovidNumber);
@@ -34,7 +34,7 @@
             var localStore = true;
             setUpLocalStorage();
         }
-
+        
         checkStoredData();
 
         const arrHistory = [
@@ -73,8 +73,12 @@
             return a[1] - b[1]
         });
 
-        var totalDaysMS = currentDate.getTime() - firstCovidDeath.getTime();
-        averagePerDay = parseInt(CovidNumber / (totalDaysMS / (1000*60*60*24)));
+        /* =================================================
+        HTML CODE DYNAMICALLY WRITTEN PER arrHistory ARRAY
+        ================================================= */
+
+        //var totalDaysMS = currentDate.getTime() - firstCovidDeath.getTime();
+        //averagePerDay = parseInt(CovidNumber / (totalDaysMS / (1000*60*60*24)));
 
         var rowStart, rowDatStart, rowDatStop, rowBarStart, rowEnd;
 
@@ -245,16 +249,22 @@
 
         function checkStoredData() {
             let upD = getStorage("updateDate");
-            if (upD != updateDate) {
+            
+            if (upD != "null") {
+                alert(upD  +"  "+ updateDate);
                 updateDate = upD;
                 setStorage("updateDate", updateDate);
                 currentDate = new Date(updateDate);
+            } else {
+                alert(upD +" upd ");
             }
 
             let upC = getStorage("storedCount");
-            if (upC != CovidNumber) {
+            if (upC != "null") {
                 CovidNumber = upC;
                 setStorage("storedCount", CovidNumber);
+            } else {
+                alert(upC +" upC ");
             }
         }
 
@@ -283,6 +293,7 @@
                 return window.localStorage.getItem(memKey);
             }
         }
+        
         function setStorage(memKey, val) {
             if (localStore) {
                 window.localStorage.setItem(memKey, val);
@@ -427,21 +438,18 @@
 
         button {
             width: 120px;
-            height: 40px;
-            margin-left: 20px;
-            margin-right: 0px;
-            color: #000;
+            height: 32px;
+            color: #fff;
             font-size: 20px;
-            background-color: #ffb;
-            border: 2px solid #aaa;
+            background-color: #666;
+            border: 0px;
             border-radius: 12px;
         }
 
         .updateBtn {
             margin-left: 0px;
             margin-right: 14px;
-            background-color: #ccc;
-            display: none;
+            display: block;
         }
 
         .tableTitle {
@@ -696,11 +704,11 @@
     </div>
 
     <div class="total">
-        <h1 id="total"></h1>
+        <h1 id="total">Click "Update" and "Reset"</h1>
 
         <div class="tableTitle" id="valueTitle">
-            <p>
-                <button id="update" class="updateBtn">Update</button> Updated: <span id="updateDate"></span>
+                <button id="update" class="updateBtn">Update</button>
+            <p>Updated: <span id="updateDate"></span>
             </p>
         </div>
 
