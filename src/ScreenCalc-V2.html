@@ -7,10 +7,10 @@
 
     <title>Screen Size Calculator</title>
 
-    <script src="../eruda.min.js"></script>
+    <!--<script src="../eruda.min.js"></script>
     <script>
         eruda.init();
-    </script>
+    </script>-->
 
     <script>
 
@@ -35,14 +35,17 @@
             resWinput = d.getElementById("resW");
             resHinput = d.getElementById("resH");
 
-            defaultInputBG = "#ffd";
+            //defaultInputBG = "#ffd";
+            //defaultInputBG = "#cceeff";
+            
+            defaultInputBG = "#b0e4e4";
             errorInputBG = "ffd8d8";
 
             doCalc();
         }
 
         function doCalc() {
-            
+
             checkNumber();
 
             var aspectH = aspH.value;
@@ -61,6 +64,10 @@
 
                 ///Calculate ppi or area
                 checkPPI(tmp);
+            } else {
+                outH.innerHTML = "---";
+                outW.innerHTML = "---";
+                
             }
         }
 
@@ -107,7 +114,7 @@
                     let tmpRes = (Number(resWinput.value) > Number(resHinput.value)) ? Number(resWinput.value): Number(resHinput.value);
                     let tmpSize = (Number(outW.innerHTML) > Number(outH.innerHTML)) ? Number(outW.innerHTML): Number(outH.innerHTML);
                     console.log("yes " + tmpRes +"  "+ tmpSize);
-                    label.innerHTML = "Pixels per Inch";
+                    label.innerHTML = "Pixels per In.";
                     area.innerHTML = parseInt(tmpRes / tmpSize);
                 }
 
@@ -121,11 +128,11 @@
                     return
                 }
 
-                //trim down area values for large screens
-                if (tmp < 9999) {
+                ///trim down area values for large screens
+                if (tmp < 1000) {
                     area.innerHTML = numAddComma(tmp.toFixed(2));
                 } else {
-                    area.innerHTML = numAddComma(tmp.toFixed(1));
+                    area.innerHTML = numAddComma(tmp.toFixed(0));
                 }
             }
 
@@ -140,6 +147,7 @@
         }
 
         function trimDecimal(num) {
+
             var tmp = num.toString();
             if (tmp[tmp.length-1] == "0") {
                 return tmp.substr(0, tmp.length-1);
@@ -149,6 +157,7 @@
         }
 
         function numAddComma(num) {
+
             if (num.toString().indexOf(".") > -1) {
                 var tmp = num.toString().split(".");
                 var pre = tmp[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",").valueOf();
@@ -164,6 +173,7 @@
         }
 
         function checkNumber(flag) {
+
             if (flag != "res") {
 
                 i = 0;
@@ -204,7 +214,7 @@
                     inputs[i].style.backgroundColor = defaultInputBG;
                     inputs[i].classList.remove("error")
                     //outputs[i].style.backgroundColor = "#fdfdfd";
-                    outputs[i].style.backgroundColor = "#787878";
+                    outputs[i].style.backgroundColor = "#fff";
                     outputs[i].classList.remove("error");
                     outputs[i].innerHTML = 0;
                 }
@@ -233,6 +243,7 @@
         }
 
         function putErrorMsg(idx) {
+
             inputs[idx].classList.add("error");
 
             if (idx < 3) {
@@ -259,21 +270,21 @@
 		18:9 screen is ~ 2.0
 		*/
             var ratio = screen.height/screen.width;
-            //alert(ratio);
+            ///alert(ratio);
             var tmp;
 
-            //ratio = 1.4; //Force Ratio for debugging
+            ///ratio = 1.4; //Force Ratio for debugging
 
-            if (ratio > 1.8) {
+            if (ratio >= 1.75) {
                 //reformat for 18:9
                 tmp = d.getElementsByTagName("body");
-                tmp[0].style.marginTop = "70px";
+                tmp[0].style.marginTop = "60px";
 
                 tmp = d.getElementById("instructions");
-                tmp.style.marginBottom = "120px";
+                tmp.style.marginBottom = "100px";
 
                 tmp = d.getElementById("resultsTitle");
-                tmp.style.marginTop = "90px";
+                tmp.style.marginTop = "110px";
                 tmp.style.marginBottom = "20px";
 
                 tmp = d.getElementsByTagName("h4");
@@ -287,22 +298,39 @@
                 if (tmp.length > 0) {
                     for (i = 0; i < tmp.length; i++) {
                         tmp[i].style.paddingTop = "20px";
-                        tmp[i].style.marginTop = "130px";
+                        tmp[i].style.marginTop = "260px";
                     }
                 }
-            }
+
+                tmp = d.getElementsByClassName("header");
+                if (tmp.length > 0) {
+                    for (i = 0; i < tmp.length; i++) {
+                        //tmp[i].style.paddingTop = "20px";
+                        tmp[i].style.marginTop = "100px";
+                    }
+                }
+
+                tmp = d.getElementById("aspectInstruct");
+                //tmp.innerHTML = tmp.innerHTML.replace("<br>", "");
+                tmp.style.marginBottom = "24px";
+
+                tmp = d.getElementById("aspectInstruct2");
+                //tmp.innerHTML = tmp.innerHTML.replace("<br>", "");
+                tmp.style.marginBottom = "24px";
+
+             }
 
             if (ratio < 1.75) {
 
                 tmp = d.getElementsByTagName("body");
-                tmp[0].style.marginTop = "50px";
+                tmp[0].style.marginTop = "70px";
 
                 tmp = d.getElementById("title");
                 tmp.style.fontSize = "90px";
                 // tmp.style.marginBottom = "70px";
 
                 tmp = d.getElementById("instructions");
-                tmp.style.marginBottom = "60px";
+                tmp.style.marginBottom = "125px";
 
                 tmp = d.getElementsByTagName("p");
                 if (tmp.length > 0) {
@@ -318,10 +346,17 @@
                     }
                 }
 
-                tmp = d.getElementsByTagName("h3");
+                 tmp = d.getElementsByClassName("lgTxt");
                 if (tmp.length > 0) {
                     for (i = 0; i < tmp.length; i++) {
-                        tmp[i].style.fontSize = "40px";
+                        tmp[i].style.fontSize = "78px";
+                    }
+                }
+
+               tmp = d.getElementsByTagName("h3");
+                if (tmp.length > 0) {
+                    for (i = 0; i < tmp.length; i++) {
+                        tmp[i].style.fontSize = "48px";
                         tmp[i].style.marginTop = "0px";
                         tmp[i].style.marginBottom = "20px";
                     }
@@ -330,7 +365,7 @@
                 tmp = d.getElementsByTagName("h4");
                 if (tmp.length > 0) {
                     for (i = 0; i < tmp.length; i++) {
-                        tmp[i].style.fontSize = "40px";
+                        tmp[i].style.fontSize = "48px";
                         tmp[i].style.marginTop = "-20px";
                         tmp[i].style.marginBottom = "0px";
                     }
@@ -339,7 +374,8 @@
                 tmp = d.getElementsByClassName("row");
                 if (tmp.length > 0) {
                     for (i = 0; i < tmp.length; i++) {
-                        tmp[i].style.height = "70px";
+                        //tmp[i].style.height = "70px";
+                        tmp[i].style.height = "100px";
                     }
                 }
 
@@ -360,7 +396,7 @@
                 tmp = d.getElementsByClassName("addGap");
                 if (tmp.length > 0) {
                     for (i = 0; i < tmp.length; i++) {
-                        tmp[i].style.paddingTop = "65px";
+                        tmp[i].style.paddingTop = "95px";
                     }
                 }
 
@@ -395,8 +431,8 @@
 
         body {
             margin: 50px;
-            margin-top: 72px;
-            background-color: #dfdfdf;
+            margin-top: 82px;
+            background-color: #ececec;
             //background-color: #e0e0e0;
         }
 
@@ -404,34 +440,33 @@
             font-size: 96px;
             margin-top: 0px;
             margin-bottom: -25px;
-            color: #44445f;
+            color: #225588;
         }
 
         #instructions {
-            //margin-bottom: 80px;
+            margin-bottom: 280px;
         }
 
         h3 {
-            font-size: 56px;
+            font-size: 62px;
             margin-top: 120px;
             margin-bottom: -15px;
         }
 
         h4 {
-            font-size: 56px;
-            margin-top: 80px;
+            font-size: 62px;
+            margin-top: 100px;
             margin-bottom: 0px;
         }
 
         h3, h4 {
             clear: left;
-            color: #000;
-            //border: 2px solid #f00;
+            color: #225588;
         }
 
         p, input {
             font-size: 40px;
-            color: #000;
+            color: #3a3a3a;
         }
 
         p, h1, h3, h4 {
@@ -446,22 +481,25 @@
         }
 
         div, input, span {
-            border: 0px solid #f00;
+            /*border: 1px solid #0f0;*/
         }
 
         input {
             height: 105px;
-            width: 98%;
-            font-size: 60px;
+            width: 88%;
+            font-size: 50px;
             font-weight: bold;
             text-align: center;
             margin-left: auto;
             margin-right: auto;
             border: 0;
-            border-top: 4px solid #ddd;
+/*            border: 2px solid #f8f8f8;
+            border-top: 3px solid #cfcfcf;
             border-bottom: 3px solid #fff;
-            background-color: #ffd;
-            color: #000;
+*/
+            background-color: #b0e4e4;
+        
+            color: #333;
             padding-top: 3px;
             border-radius: 14px;
         }
@@ -478,22 +516,37 @@
             margin-right: auto;
         }
 
+        #dimContainer {
+            width: 95%;
+            height: 170px;
+            background-color: #fff;
+            padding-top: 20px;
+            border-radius: 16px;
+            box-shadow: 0px 2px 3px 0px #bbb;
+            margin-bottom: 45px;
+            position: relative;
+            clear: left;
+            display: block;
+        }
+
         #infoContainer {
             float: left;
             clear: right;
             width: 100%;
-            margin-bottom: 80px;
-            //border: 3px solid #ddd;
+            margin-bottom: 8px;
         }
 
         .row {
-            height: 90px;
+            height: auto;
+            margin-top: 2px;
+            margin-bottom: 0px;
+            clear: right;
         }
 
         .header {
             height: 60px;
             padding-top: 14px;
-            /* background-color: #F00; */
+            margin-top: 16px;
         }
 
         .rightCol {
@@ -504,7 +557,7 @@
             float: left;
             padding: 0px;
             text-align: center;
-            width: 33.33%;
+            width: 33.0%;
         }
 
         .leftCol p, .middleCol p, .rightCol p {
@@ -515,22 +568,34 @@
             height: 105px;
             width: 98%;
             padding-top: 4px;
-            color: #000;
+            color: #444;
             font-size: 60px;
             font-weight: bold;
             text-align: center;
-            border-top: 3px solid #ddd;
-            border-radius: 14px;
+            //border-top: 3px solid #ddd;
+            //border-radius: 14px;
+        }
+        
+        .lgTxt {
+            margin-top: 10px;
+            font-size: 80px;
         }
 
         .boxBG {
-            background-color: #f4f4f4;
+            border-top: 3px solid #bbb;
+            border-bottom: 3px solid #bbb;
         }
+        
+        .boxBG p {
+            font-size: 20px;
+        }
+        
+       }
 
         .boxWhite {
-            padding-top: 25px;
-            background-color: #444;
-            color: #fff;
+            padding-top: 0px;
+            background-color: #fff;
+            color: #444;
         }
 
         .error {
@@ -543,6 +608,7 @@
 
         .bold {
             font-weight: bold;
+            color: #4A4A4A;
         }
 
         .red {
@@ -602,13 +668,13 @@
         }
 
         .info {
-            /* position: fixed;
-			bottom: 10px; */
-            width: 100%;
+            position: fixed;
+			bottom: 25px;
+            width: 80%;
             height: 100px;
             padding: 0px;
             /* border: #F00 1px solid; */
-            margin-top: 105px;
+            //margin-top: 105px;
         }
 
         #infoMsg {
@@ -618,12 +684,12 @@
         }
 
         .space {
-            height: 200px;
+            height: 160px;
         }
 
         .addGap {
-            padding-top: 200px;
-            //border: 2px solid #f00;
+            padding-top: 80px;
+            /*border: 2px solid #f00;*/
         }
 
         #outH, #outW, #totalArea {
@@ -635,11 +701,11 @@
 
         input::-webkit-input-placeholder {
             /* WebKit, Blink, Edge */
-            color: #888;
-            opacity: .6;
+            color: #444;
+            opacity: .5;
         }
 
-            :-moz-placeholder {
+:-moz-placeholder {
             /* Mozilla Firefox 4 to 18 */
             color: #dddddd;
             opacity: .8;
@@ -651,29 +717,15 @@
             opacity: .8;
         }
 
-        :-ms-input-placeholder {
+:-ms-input-placeholder {
             /* Internet Explorer 10-11 */
             color: #dddddd;
             opacity: .8;
         }
 
-        #dimContainer {
-            width: 94%;
-            height: 200px;
-            background-color: #fff;
-            padding: 24px;
-            border-radius: 28px;
-            //border: 2px solid red;
-            //border-top: 2px solid #fff;
-            //border-bottom: 2px solid #bbb;
-            margin-bottom: -80px;
-            position: relative;
-            clear: left;
-            display: block;
-        }
-        
         .instruct {
             margin-bottom: 10px;
+            color: #606060;
         }
 
     </style>
@@ -690,7 +742,7 @@
 
         <div id="instructions">
             <p>
-                Calculate the physical size of a screen.
+                Calculate the physical size of a screen
             </p>
         </div>
 
@@ -699,6 +751,18 @@
         <div id="dimContainer">
 
             <div id="infoContainer">
+
+              <div class="row">
+                    <div class="leftCol">
+                        <p id="outH" class="hilite boxWhite lgTxt"></p>
+                    </div>
+                    <div class="middleCol">
+                        <p id="outW" class="hilite boxWhite lgTxt"></p>
+                    </div>
+                    <div class="rightCol">
+                        <p id="totalArea" class="hilite boxWhite lgTxt"></p>
+                    </div>
+                </div>
 
                 <div class="row header">
                     <div class="leftCol">
@@ -718,18 +782,6 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="leftCol">
-                        <p id="outH" class="hilite boxWhite"></p>
-                    </div>
-                    <div class="middleCol">
-                        <p id="outW" class="hilite boxWhite"></p>
-                    </div>
-                    <div class="rightCol">
-                        <p id="totalArea" class="hilite boxWhite"></p>
-                    </div>
-                </div>
-
             </div>
         </div>
 
@@ -738,6 +790,24 @@
         </p>
 
         <div id="infoContainer">
+
+            <div class="row">
+                <div class="leftCol">
+                    <p>
+                        <input id="aspectH" type="text" name="Height" value="" placeholder="Edit" onClick="this.placeholder='';this.select();" oninput="doCalc()" onblur="doCalc()" />
+                    </p>
+                </div>
+                <div class="middleCol">
+                    <p>
+                        <input id="aspectW" type="text" name="Width" value="" placeholder="Edit" onClick="this.placeholder='';this.select();" oninput="doCalc()" onblur="doCalc()">
+                    </p>
+                </div>
+                <div class="rightCol">
+                    <p>
+                        <input id="diag" type="text" name="Diagonal" value="" placeholder="Edit" onClick="this.placeholder='';this.select();" oninput="doCalc()" onblur="doCalc()" />
+                    </p>
+                </div>
+            </div>
 
             <div class="row header">
                 <div class="leftCol">
@@ -756,25 +826,6 @@
                     </p>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="leftCol">
-                    <p>
-                        <input id="aspectH" type="text" name="Height" value="" placeholder="16" onClick="this.placeholder='';this.select();" oninput="doCalc()" onblur="doCalc()" />
-                    </p>
-                </div>
-                <div class="middleCol">
-                    <p>
-                        <input id="aspectW" type="text" name="Width" value="9" onClick="this.select();" oninput="doCalc()" onblur="doCalc()">
-                    </p>
-                </div>
-                <div class="rightCol">
-                    <p>
-                        <input id="diag" type="text" name="Diagonal" value="" placeholder="5.8" onClick="this.placeholder='';this.select();" oninput="doCalc()" onblur="doCalc()" />
-                    </p>
-                </div>
-            </div>
-
         </div>
 
 
@@ -785,6 +836,22 @@
         </p>
 
         <div id="infoContainer">
+           <div class="row">
+                <div class="leftCol">
+                    <p>
+                        <input id="resH" type="text" name="resHeight" value="" placeholder="Edit" onClick="this.placeholder='';this.select()" oninput="doResCalc()" onblur="doResCalc()" />
+                    </p>
+                    <!-- <p id="resW" class="hilite">0</p> -->
+                </div>
+                <div class="middleCol">
+                    <p>
+                        <input id="resW" type="text" name="resWinput" value="" placeholder="Edit" placeholder="" onClick="this.placeholder='';this.select()" oninput="doResCalc()" onblur="doResCalc()" />
+                    </p>
+                </div>
+                <div class="rightCol">
+                    <p id="aspect" class="hilite boxBG">---</p>
+                </div>
+            </div>
 
             <div class="row header">
                 <div class="leftCol">
@@ -804,24 +871,7 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="leftCol">
-                    <p>
-                        <input id="resH" type="text" name="resHeight" value="" placeholder="2300" onClick="this.placeholder='';this.select()" oninput="doResCalc()" onblur="doResCalc()" />
-                    </p>
-                    <!-- <p id="resW" class="hilite">0</p> -->
-                </div>
-                <div class="middleCol">
-                    <p>
-                        <input id="resW" type="text" name="resWinput" value="1080" placeholder="1080" onClick="this.placeholder='';this.select()" oninput="doResCalc()" onblur="doResCalc()" />
-                    </p>
-                </div>
-                <div class="rightCol">
-                    <p id="aspect" class="hilite boxBG darkGray"></p>
-                </div>
-            </div>
-
-            <div class="info">
+             <div class="info">
                 <p id="infoMsg">
                     Manufacturer provided aspect and diagonal values may have been rounded to 0.1". Measurement tolerance is +/- 0.05".
                 </p>
@@ -835,8 +885,7 @@
 
         </div>
 
-
-        <!-- ====================================================-->
+        <!-- ===================================
         <!-- ==  DYNAMIC MODAL  =================================-->
 
         <div id="dialog">
@@ -848,6 +897,7 @@
                 OK
             </div>
         </div>
+    </div>
 
-    </body>
+</body>
 </html>
